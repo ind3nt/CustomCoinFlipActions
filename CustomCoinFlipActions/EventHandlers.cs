@@ -6,6 +6,7 @@ using Random = System.Random;
 using Exiled.API.Features.Items;
 using System.Linq;
 using Exiled.API.Enums;
+using MEC;
 
 namespace CustomCoinFlipActions
 {
@@ -18,31 +19,34 @@ namespace CustomCoinFlipActions
 
             var RandomChar = random.Next(0, 100);
 
-            if (RandomChar > 0 && RandomChar < 10) 
-                KillPlayer(ply);
+            Timing.CallDelayed(2.5f, () =>
+            {
+                if (RandomChar >= 0 && RandomChar < 10)
+                    KillPlayer(ply);
 
-            if (RandomChar > 10 && RandomChar > 20)
-                ply.Broadcast(3, "Монета исчезла!");
+                if (RandomChar >= 10 && RandomChar < 20)
+                    ply.Broadcast(3, "Монета исчезла!");
 
-            if (RandomChar >= 20 && RandomChar < 30)
-                ChangeRole(ply);
+                if (RandomChar >= 20 && RandomChar < 30)
+                    ChangeRole(ply);
 
-            if (RandomChar >= 30 && RandomChar < 40)
-                Teleport106(ply);
+                if (RandomChar >= 30 && RandomChar < 40)
+                    Teleport106(ply);
 
-            if (RandomChar >= 40 && RandomChar < 50)
-                ScpToPlayer(ply);
+                if (RandomChar >= 40 && RandomChar < 50)
+                    ScpToPlayer(ply);
 
-            if (RandomChar >= 50 && RandomChar < 70)
-                Zombiezation(ply);
+                if (RandomChar >= 50 && RandomChar < 70)
+                    Zombiezation(ply);
 
-            if (RandomChar >= 70 && RandomChar < 90)
-                Grenades(ply);
+                if (RandomChar >= 70 && RandomChar < 90)
+                    Grenades(ply);
 
-            if(RandomChar >= 90 && RandomChar <= 100)
-                FlashGrenades(ply);
+                if (RandomChar >= 90 && RandomChar <= 100)
+                    FlashGrenades(ply);
 
-            ply.RemoveItem(ev.Item);
+                ply.RemoveItem(ev.Item);
+            });
         }
 
         private static void KillPlayer(Player p)
@@ -54,7 +58,7 @@ namespace CustomCoinFlipActions
 
         private static void ChangeRole(Player p)
         {
-            p.Role.Set(Plugin.Instance.Config.RandRoleList.RandomItem());
+            p.Role.Set(Plugin.Instance.Config.RandRoleList.RandomItem(), RoleSpawnFlags.None);
             p.Broadcast(3, $"Бросок монетки превратил вас в {p.Role.Name}!");
         }
 
@@ -103,6 +107,10 @@ namespace CustomCoinFlipActions
             {
                 ScpPlayersList.ToList().RandomItem().Position = p.Position;
                 p.Broadcast(3, "Бросок монетки перенес к вам SCP!");
+            }
+            else
+            {
+                p.Broadcast(3, "Монета исчезла!");
             }
         }
 
